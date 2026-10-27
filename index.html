@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mr. Sample SP-589</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  .device-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+  }
+  .device-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+  }
+  .btn-589 {
+    position: absolute;
+    right: 7.5%;
+    bottom: 17.5%;
+    width: 17%;
+    height: 11.5%;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.07s ease-out, filter 0.07s ease-out;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-589:active,
+  .btn-589.pressed {
+    transform: scale(0.93) translateY(1.5px);
+    filter: brightness(1.4) saturate(1.25);
+    box-shadow: 0 0 20px 7px rgba(255, 210, 70, 0.9), inset 0 0 10px rgba(255, 255, 180, 0.7);
+    background: rgba(255, 220, 90, 0.3);
+  }
+  audio { display: none; }
+</style>
+</head>
+<body>
+
+<div class="device-wrap">
+  <img src="sp589.jpg" alt="Mr. Sample SP-589" class="device-img">
+  <button class="btn-589" id="btn589" aria-label="Play / Next"></button>
+</div>
+
+<audio id="player" preload="none"></audio>
+
+<script>
+const playlist = [
+  { title: "4Given", url: "https://ia600809.us.archive.org/13/items/blueberry-beret/4Given.wav" },
+  { title: "Blueberry Beret", url: "https://ia600809.us.archive.org/13/items/blueberry-beret/Blueberry%20Beret.wav" },
+  { title: "Bumpy Johnzon", url: "https://ia600809.us.archive.org/13/items/blueberry-beret/Bumpy%20Johnzon.wav" },
+  { title: "Circle Z", url: "https://ia600809.us.archive.org/13/items/blueberry-beret/Circle%20Z.wav" },
+  { title: "Muppetz", url: "https://ia600809.us.archive.org/13/items/blueberry-beret/Muppetz.wav" },
+  { title: "Sandy Crotch", url: "https://ia600809.us.archive.org/13/items/blueberry-beret/Sandy%20Crotch%20.wav" },
+  { title: "Send It", url: "https://ia600809.us.archive.org/13/items/blueberry-beret/Send%20It.wav" }
+];
+
+let current = 0;
+const audio = document.getElementById('player');
+const btn589 = document.getElementById('btn589');
+
+function flashPress() {
+  btn589.classList.add('pressed');
+  setTimeout(() => btn589.classList.remove('pressed'), 140);
+}
+
+function loadTrack(index) {
+  if (!playlist.length) return;
+  current = (index + playlist.length) % playlist.length;
+  audio.src = playlist[current].url;
+  audio.load();
+}
+
+function playCurrent() {
+  audio.play().catch(() => {});
+}
+
+function nextTrack() {
+  loadTrack(current + 1);
+  playCurrent();
+}
+
+btn589.addEventListener('pointerdown', flashPress);
+btn589.addEventListener('click', () => {
+  flashPress();
+  if (audio.paused || audio.ended) {
+    if (!audio.src) loadTrack(0);
+    playCurrent();
+  } else {
+    nextTrack();
+  }
+});
+
+audio.addEventListener('ended', nextTrack);
+</script>
+
+</body>
+</html>
